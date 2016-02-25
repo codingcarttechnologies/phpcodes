@@ -1,0 +1,98 @@
+<html>
+<head>
+<meta charset='utf-8'>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   <link rel="stylesheet" href="css/bootstrap.css">
+   <link rel="stylesheet" href="css/style.css">
+   <script src="js/jquery-1.9.1.min.js"></script>
+</head>
+
+<body onLoad="disableClick()">
+
+<div id="wrapper">
+<div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <h1 class="text-center">Login</h1>
+      </div>
+      <div class="modal-body">
+	  <span id="errormsg" style="display:none; color:red;"><p>Please Enter Valid Credentials</p></span>
+          <form class="form col-md-12 center-block" id="loginForm" action="authenticate.php" method="POST">
+            <div class="form-group">
+              <input type="email" name="email" class="form-control input-lg" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" class="form-control input-lg" placeholder="Password">
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-lg btn-block">Sign In</button>
+              <span class="pull-right"><a href="register.html">Register</a></span><span><a href="#">Need help?</a></span>
+            </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+          <!--div class="col-md-12">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		  </div-->	
+      </div>
+  </div>
+  </div>
+</div>
+</div>
+
+
+
+<br>
+<div id="contactResponse"></div>
+<script>
+function disableClick(){
+        document.onclick=function(event){
+          if (event.button == 2) {
+            alert('Right Click Disable');
+            return false;
+          }
+        }
+      }
+	  
+     $("#loginForm").submit(function(event) 
+     {
+         /* stop form from submitting normally */
+         event.preventDefault();
+
+         /* get some values from elements on the page: */
+         var $form = $( this ),
+
+             email_value = $form.find( 'input[name="email"]' ).val(),
+             password = $form.find( 'input[name="password"]' ).val(),
+             url = $form.attr('action');
+			 
+
+         /* Send the data using post */
+         var posting = $.post( url, { 
+                           email: email_value, 
+                           password: password,
+                           action: 'login' 
+                       });
+
+         posting.done(function( data )
+             {
+		     if (data.indexOf("posting") !=-1) {
+                  $('#errormsg').show(0).delay(5000).hide(0);
+                   //$('#errormsg').delay(5000);
+             }
+			 else{
+			 
+             /* Put the results in a div */
+             $( "#contactResponse" ).html(data);
+             $("#wrapper").hide();
+         }
+		 });
+		 
+    });
+</script>
+</body>
+</html>
